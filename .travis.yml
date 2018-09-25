@@ -5,9 +5,11 @@ php:
   - 5.6
   - 7.1
   - 7.2
-  - 7.3
+  - 7.3snapshot
 
-dist: trusty
+sudo: required
+
+dist: xenial
 
 env:
   matrix:
@@ -34,7 +36,7 @@ cache:
 matrix:
   fast_finish: true
   allow_failures:
-    - php: 7.3
+    - php: 7.3snapshot
 
   include:
     - php: 7.0
@@ -64,6 +66,8 @@ before_install:
   - if [[ ${TRAVIS_PHP_VERSION:0:1} == "7" ]] ; then echo "yes" | pecl install channel://pecl.php.net/apcu-5.1.5 || true; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:1} == "5" ]] ; then echo "yes" | pecl install apcu-4.0.11 || true; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:1} == "5" && $DB = 'mysql' ]] ; then wget http://xcache.lighttpd.net/pub/Releases/3.2.0/xcache-3.2.0.tar.gz; tar xf xcache-3.2.0.tar.gz; pushd xcache-3.2.0; phpize; ./configure; make; NO_INTERACTION=1 make test; make install; popd;printf "extension=xcache.so\nxcache.size=64M\nxcache.var_size=16M\nxcache.test=On" > ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini; fi
+
+  - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.3" ]] ; then sudo apt install libzip4; fi
 
   - sudo locale-gen da_DK
 
